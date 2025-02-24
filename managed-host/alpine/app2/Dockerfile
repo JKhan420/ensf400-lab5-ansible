@@ -1,6 +1,6 @@
 # https://github.com/panubo/docker-sshd
-FROM alpine:3.9 as alpine-systemd
-RUN apk --update --no-cache add openrc python && \
+FROM alpine:latest as alpine-systemd
+RUN apk --update --no-cache add openrc python3 && \
   ln -sf /sbin/openrc-init /sbin/init
 
 ENTRYPOINT ["/sbin/init"]
@@ -9,7 +9,7 @@ ENTRYPOINT ["/sbin/init"]
 FROM alpine-systemd as alpine-sshd
 
 RUN apk update && \
-    apk add bash git openssh rsync augeas shadow && \
+    apk add bash git openssh rsync augeas shadow python3 && \
     deluser $(getent passwd 33 | cut -d: -f1) && \
     delgroup $(getent group 33 | cut -d: -f1) 2>/dev/null || true && \
     mkdir -p ~root/.ssh /etc/authorized_keys && chmod 700 ~root/.ssh/ && \
